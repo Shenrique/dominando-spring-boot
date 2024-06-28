@@ -1,6 +1,7 @@
 package academy.devdojo.repository;
 
 import academy.devdojo.domain.Producer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -11,37 +12,31 @@ import java.util.Optional;
 @Repository
 public class ProducerHardCodedRepository {
 
-    private static List<Producer> PRODUCERS = new ArrayList<>();
 
-
-    static {
-        var mappa = Producer.builder().id(1L).name("MAPPA").createdAt(LocalDateTime.now()).build();
-        var kyotoAnimation = Producer.builder().id(2L).name("Kyoto").createdAt(LocalDateTime.now()).build();
-        var madhouse = Producer.builder().id(3L).name("MadHouse").createdAt(LocalDateTime.now()).build();
-        PRODUCERS.addAll(List.of(mappa, kyotoAnimation, madhouse));
-    }
+    @Autowired
+    private ProducerData producerData;
 
     public List<Producer> findAll() {
-        return PRODUCERS;
+        return producerData.getProducers();
     }
 
     public Optional<Producer> findById(Long id) {
-        return PRODUCERS.stream().filter(producer -> producer.getId().equals(id)).findFirst();
+        return producerData.getProducers().stream().filter(producer -> producer.getId().equals(id)).findFirst();
 
     }
 
     public List<Producer> findByName(String name) {
-        return name == null ?  PRODUCERS :
-                PRODUCERS.stream().filter(producer -> producer.getName().equals(name)).toList();
+        return name == null ?  producerData.getProducers() :
+                producerData.getProducers().stream().filter(producer -> producer.getName().equals(name)).toList();
     }
 
     public Producer save(Producer producer) {
-        PRODUCERS.add(producer);
+        producerData.getProducers().add(producer);
         return producer;
     }
 
     public void delete(Producer producer) {
-        PRODUCERS.remove(producer);
+        producerData.getProducers().remove(producer);
     }
 
     public void update(Producer producer) {
